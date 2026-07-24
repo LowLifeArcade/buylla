@@ -21,5 +21,5 @@ http.createServer(async (req, resp) => {
         INSERT INTO visitor (id, agent)
         VALUES (?, ?)
     `).run(randomUUIDv7(), ua)
-    resp.end('Buy Now '+ ua + cookie.split(';').join('\n'));
+    resp.end('Buy Now '+ ua + cookie?.split(';').join('\n'));
 }).listen(PORT || 4000, () => console.log('running on ' + PORT));
