@@ -20,6 +20,9 @@ http.createServer(async (req, resp) => {
     db.prepare(`
         INSERT INTO visitor (id, agent)
         VALUES (?, ?)
-    `).run(randomUUIDv7(), ua)
-    resp.end('Buy Now '+ ua + cookie?.split(';').join('\n'));
+    `).run(randomUUIDv7(), ua);
+
+    const visitors = db.prepare('SELECT * FROM visitor').all();
+    console.log(`🚀 | visitors:`, visitors.map(v => v.id +  v.agent))
+    resp.end('Buy Now '+ ua + cookie?.split(';').join('\n') + visitors.map(v => v.id +  v.agent).toString());
 }).listen(PORT || 4000, () => console.log('running on ' + PORT));
