@@ -1,0 +1,80 @@
+import dotenv from 'dotenv';
+import express from 'express';
+import { PlanSchema } from './schema/index.ts';
+
+dotenv.config();
+
+const { PORT, ENV } = process.env;
+
+const codes = {
+    VALIDATION_ERROR: 'VALIDATION_ERROR',
+};
+
+const app = express();
+
+app.use(express.json());
+
+app.get('/', async (req, resp) => {
+    resp.send({ message: 'home ' });
+});
+
+// app dashboard endpoints
+
+// probably be a different app eventually
+app.post('/dashboard/product/:id', (req, resp) => {
+    const result = PlanSchema.safeParse(req.body);
+
+    if (!result.success) {
+        resp.status(400).send({
+            error: {
+                code: codes.VALIDATION_ERROR,
+                message: 'There was an issue with some fields',
+                fields: result.error.issues.map(({ code, message, path }) => ({
+                    code,
+                    message,
+                    field: path.join('.'),
+                })),
+            },
+        });
+
+        return;
+    }
+    // session has client data like business the product will be for
+    // plan.id should be for that company only so it can be anything but cannot be duplicate for that company
+    // how do we have unique('company-name', 'premium-plan')
+
+    resp.send({ message: 'done' });
+});
+
+app.get('/dashboard/products', async (req, resp) => {
+    resp.json([]);
+});
+
+// client endpoints
+
+/**
+    we have nested products that are delivered to client calling /products
+    products
+        offer one
+            abandonment
+            special offer
+        offer two
+            abandoment
+            special offer
+ */
+app.get('/app/products', (req, resp) => {
+    // client product should be scalted down for client
+    resp.send([
+        {
+            name: 'premium',
+            price: 1000,
+        },
+    ]);
+});
+
+app.post('/app/checkout/:transactionId', async (req, resp) => {
+    console.log(req.params.transactionId);
+    resp.send({ message: 'done' });
+});
+
+app.listen(PORT, () => console.log(`running on port ${PORT}`));
