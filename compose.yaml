@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: buylla
+      POSTGRES_PASSWORD: buylla
+      POSTGRES_DB: buylla
+    ports:
+      - "5432:5432"
+    volumes:
+      - buylla_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U buylla -d buylla"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  buylla_postgres:
