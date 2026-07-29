@@ -5,10 +5,15 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "dev": "node --watch ./src/server.ts",
         "start": "node ./src/server.ts",
-        "migrate": "node-pg-migrate up",
-        "migrate:down": "node-pg-migrate down",
+        "dev": "npm run db:up && npm run db:migrate && node --watch ./src/server.ts",
+        "setup": "bash ./scripts/setup-local.sh",
+        "db:up": "docker compose up --wait postgres",
+        "db:down": "docker compose down",
+        "db:migrate": "node-pg-migrate up",
+        "db:seed": "bash ./scripts/seed-development.sh",
+        "db:reset": "bash ./scripts/reset-database.sh",
+        "db:shell": "docker compose exec postgres sh -c 'psql -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\"'",
         "build": ""
     },
     "keywords": [],

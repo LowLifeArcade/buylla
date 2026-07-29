@@ -2,15 +2,15 @@ services:
     postgres:
         image: postgres:18
         environment:
-            POSTGRES_USER: buylla
-            POSTGRES_PASSWORD: buylla
-            POSTGRES_DB: buylla
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            POSTGRES_DB: ${POSTGRES_DB}
         ports:
-            - '5432:5432'
+            - '${POSTGRES_PORT:-5432}:5432'
         volumes:
             - buylla_postgres:/var/lib/postgresql
         healthcheck:
-            test: ['CMD-SHELL', 'pg_isready -U buylla -d buylla']
+            test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
             interval: 5s
             timeout: 5s
             retries: 10

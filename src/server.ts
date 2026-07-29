@@ -1,10 +1,10 @@
-import dotenv from 'dotenv';
+import 'dotenv/config';
+
 import express from 'express';
 import { PlanSchema } from './schema/index.ts';
+import { query } from './db/index.ts';
 
-dotenv.config();
-
-const { PORT, ENV } = process.env;
+const { PORT, APP_URL } = process.env;
 
 const codes = {
     VALIDATION_ERROR: 'VALIDATION_ERROR',
@@ -77,4 +77,10 @@ app.post('/app/checkout/:transactionId', async (req, resp) => {
     resp.send({ message: 'done' });
 });
 
-app.listen(PORT, () => console.log(`running on port ${PORT}`));
+app.listen(PORT, () => {
+    const url = APP_URL + ':' + PORT;
+
+    const link = `\u001b]8;;${url}\u001b\\${url}\u001b]8;;\u001b\\`;
+
+    console.log(`running on port ${PORT}. Open ${link}`);
+});
