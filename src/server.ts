@@ -15,7 +15,8 @@ const app = express();
 app.use(express.json());
 
 app.get('/', async (req, resp) => {
-    resp.send({ message: 'home ' });
+    const companies = await query('select * from companies');
+    resp.send({ companies: companies.rows.map(row => ({ name: row.name })) });
 });
 
 // app dashboard endpoints
