@@ -19,6 +19,22 @@ app.get('/', async (req, resp) => {
     resp.send({ companies: companies.rows.map(row => ({ name: row.name })) });
 });
 
+app.post('/signup', async (req, resp) => {
+
+    const { name }: { name: string } = req.body;
+    const code = name.split(' ').map(part => part.toLowerCase().trim()).join('-');
+
+    const company = await query(
+        'insert into companies (code, name) values ($1, $2) returning *',
+        [
+            code,
+            name,
+        ],
+    );
+
+    resp.send({ company })
+});
+
 // app dashboard endpoints
 
 // probably be a different app eventually
