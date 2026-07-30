@@ -17,14 +17,18 @@ async function main() {
             url: 'signup',
             method: 'post',
             body: {
-                name: 'Acme Two'
+                name: 'Acme One'
             }
         }
     }
 
+    const host = {
+        dev: 'http://localhost:4000/',
+        prod: 'https://buylla.onrender.com/',
+    }
     const request = requests.signup;
 
-    const reqUrl = `http://localhost:4000/${request.url}`;
+    const reqUrl = `${host.prod}${request.url}`;
     console.log({
         reqUrl,
         body: request.body
